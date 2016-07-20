@@ -30,6 +30,8 @@ import java.util.Calendar;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.tool.reportmaker.eventListener.WorkflowNodeEventListener;
+import com.tool.reportmaker.eventListener.WorkflowTreeEventListener;
 import com.tool.reportmaker.exception.WorkFlowDuplicateElementException;
 import com.tool.reportmaker.exception.WorkFlowTreeDrawingFailedException;
 import com.tool.reportmaker.exception.WorkFlowValidationException;
@@ -99,6 +101,28 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 			dataManagerObject.setSaved(false);
 		}
 		return dataManagerObject;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkflow(
+	 * java.lang.String, java.lang.String, java.lang.String,
+	 * com.tool.reportmaker.object.DataManagerObject,
+	 * com.tool.reportmaker.eventListener.WorkflowNodeEventListener)
+	 */
+	@Override
+	public void createWorkflow(String workFlowName, String parentName, String childName,
+			DataManagerObject dataManagerObject, WorkflowNodeEventListener workflowNodeEventListener)
+			throws WorkFlowValidationException, WorkFlowDuplicateElementException {
+		if (validateUserInput(workFlowName, parentName, childName)) {
+			this.dataManagerObject = createWorkFlowNode(workFlowName, parentName, childName);
+			this.dataManagerObject.setSaved(false);
+			dataManagerObject = this.dataManagerObject;
+			workflowNodeEventListener.onSuccessfulNodeCreate();
+		}
+
 	}
 
 	/**
@@ -305,6 +329,35 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return root;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * createWorkFlowTree(javax.swing.tree.DefaultMutableTreeNode,
+	 * com.tool.reportmaker.eventListener.WorkflowTreeEventListener)
+	 */
+	@Override
+	public void createWorkFlowTree(DefaultMutableTreeNode defaultMutableRootTreeNode,
+			WorkflowTreeEventListener workflowTreeEventListener) throws WorkFlowTreeDrawingFailedException {
+		workflowTreeEventListener.onWorkflowTreeDrawingStart();
+		try {
+			DefaultMutableTreeNode defaultMutableTreeNode = null;
+			final ArrayList<WorkFlow> workFlowList = dataManagerObject.getWorkFlowManager().getWorkFlowList();
+			for (final WorkFlow workFlow : workFlowList) {
+				if (workFlow != null) {
+					defaultMutableTreeNode = new DefaultMutableTreeNode(workFlow.getWorkFlowName());
+					addParentNode(defaultMutableTreeNode, workFlow);
+					defaultMutableRootTreeNode.add(defaultMutableTreeNode);
+					workflowTreeEventListener.onWorkflowTreeDrawingComplete();
+				}
+			}
+		} catch (final Exception exception) {
+
+			workflowTreeEventListener.onWorkflowTreeDrawingFailed();
+		}
+
+	}
+
 	/**
 	 * Adds the parent node.
 	 *
@@ -376,6 +429,31 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 
 		}
 		dataManagerObject.setSaved(false);
+
+		return result;
+	}
+
+	@Override
+	public boolean deleteNodeController(String[] seletedValueToBeDeleted,
+			WorkflowNodeEventListener workflowNodeEventListener) {
+		boolean result = false;
+		switch (seletedValueToBeDeleted.length) {
+		case 1:
+			result = deleteWorkFlowNode(seletedValueToBeDeleted[0]);
+			break;
+
+		case 2:
+			result = deleteParentNode(seletedValueToBeDeleted[0], seletedValueToBeDeleted[1]);
+			break;
+		case 3:
+
+			result = deleteChildNode(seletedValueToBeDeleted[0], seletedValueToBeDeleted[1],
+					seletedValueToBeDeleted[2]);
+			break;
+
+		}
+		dataManagerObject.setSaved(false);
+		workflowNodeEventListener.onSuccessfulNodeDelete();
 		return result;
 	}
 

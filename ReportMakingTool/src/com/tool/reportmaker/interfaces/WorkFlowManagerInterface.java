@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.tool.reportmaker.eventListener.WorkflowNodeEventListener;
+import com.tool.reportmaker.eventListener.WorkflowTreeEventListener;
 import com.tool.reportmaker.exception.WorkFlowDuplicateElementException;
 import com.tool.reportmaker.exception.WorkFlowTreeDrawingFailedException;
 import com.tool.reportmaker.exception.WorkFlowValidationException;
@@ -49,6 +51,41 @@ public interface WorkFlowManagerInterface {
 	 *             the work flow duplicate element exception
 	 */
 	DataManagerObject createWorkflow() throws WorkFlowValidationException, WorkFlowDuplicateElementException;
+
+	/**
+	 * Creates the workflow.
+	 *
+	 * @param workFlowName
+	 *            the work flow name
+	 * @param parentName
+	 *            the parent name
+	 * @param childName
+	 *            the child name
+	 * @param dataManagerObject
+	 *            the data manager object
+	 * @param workflowNodeEventListener
+	 *            the workflow node event listener
+	 * @throws WorkFlowValidationException
+	 *             the work flow validation exception
+	 * @throws WorkFlowDuplicateElementException
+	 *             the work flow duplicate element exception
+	 */
+	void createWorkflow(String workFlowName, String parentName, String childName, DataManagerObject dataManagerObject,
+			WorkflowNodeEventListener workflowNodeEventListener)
+			throws WorkFlowValidationException, WorkFlowDuplicateElementException;
+
+	/**
+	 * Creates the work flow tree.
+	 *
+	 * @param defaultMutableTreeNode
+	 *            the default mutable tree node
+	 * @param workflowTreeEventListener
+	 *            the workflow tree event listener
+	 * @throws WorkFlowTreeDrawingFailedException
+	 *             the work flow tree drawing failed exception
+	 */
+	public void createWorkFlowTree(DefaultMutableTreeNode defaultMutableTreeNode,
+			WorkflowTreeEventListener workflowTreeEventListener) throws WorkFlowTreeDrawingFailedException;
 
 	/**
 	 * Creates the workflow.
@@ -85,6 +122,17 @@ public interface WorkFlowManagerInterface {
 	 * @return true, if successful
 	 */
 	boolean deleteNodeController(String[] seletedValueToBeDeleted);
+
+	/**
+	 * Delete node controller.
+	 *
+	 * @param seletedValueToBeDeleted
+	 *            the seleted value to be deleted
+	 * @param workflowNodeEventListener
+	 *            the workflow node event listener
+	 * @return true, if successful
+	 */
+	boolean deleteNodeController(String[] seletedValueToBeDeleted, WorkflowNodeEventListener workflowNodeEventListener);
 
 	/**
 	 * Update node controller.

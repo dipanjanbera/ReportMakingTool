@@ -29,6 +29,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.tool.reportmaker.dao.WorkFlowManagerDao;
+import com.tool.reportmaker.eventListener.WorkflowNodeEventListener;
+import com.tool.reportmaker.eventListener.WorkflowTreeEventListener;
 import com.tool.reportmaker.exception.WorkFlowDuplicateElementException;
 import com.tool.reportmaker.exception.WorkFlowTreeDrawingFailedException;
 import com.tool.reportmaker.exception.WorkFlowValidationException;
@@ -113,6 +115,23 @@ public class WorkFlowManagerService implements WorkFlowManagerInterface {
 	public DefaultMutableTreeNode createWorkFlowTree() throws WorkFlowTreeDrawingFailedException {
 		final DefaultMutableTreeNode treeNode = workFlowManagerDao.createWorkFlowTree();
 		return treeNode;
+	}
+
+	/**
+	 * Creates the work flow tree.
+	 *
+	 * @param defaultMutableTreeNode
+	 *            the default mutable tree node
+	 * @param workflowTreeEventListener
+	 *            the workflow tree event listener
+	 * @throws WorkFlowTreeDrawingFailedException
+	 *             the work flow tree drawing failed exception
+	 */
+	@Override
+	public void createWorkFlowTree(DefaultMutableTreeNode defaultMutableTreeNode,
+			WorkflowTreeEventListener workflowTreeEventListener) throws WorkFlowTreeDrawingFailedException {
+		workFlowManagerDao.createWorkFlowTree(defaultMutableTreeNode, workflowTreeEventListener);
+
 	}
 
 	/**
@@ -380,6 +399,22 @@ public class WorkFlowManagerService implements WorkFlowManagerInterface {
 	public void createNewWorkFlowObject() {
 		workFlowManagerDao.createNewWorkFlowObject();
 
+	}
+
+	@Override
+	public void createWorkflow(String workFlowName, String parentName, String childName,
+			DataManagerObject dataManagerObject, WorkflowNodeEventListener workflowNodeEventListener)
+			throws WorkFlowValidationException, WorkFlowDuplicateElementException {
+		workFlowManagerDao.createWorkflow(workFlowName, parentName, childName, dataManagerObject,
+				workflowNodeEventListener);
+
+	}
+
+	@Override
+	public boolean deleteNodeController(String[] seletedValueToBeDeleted,
+			WorkflowNodeEventListener workflowNodeEventListener) {
+
+		return workFlowManagerDao.deleteNodeController(seletedValueToBeDeleted, workflowNodeEventListener);
 	}
 
 }

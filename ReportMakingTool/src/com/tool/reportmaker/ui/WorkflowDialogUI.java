@@ -61,6 +61,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import com.tool.reportmaker.eventListener.WorkflowNodeEventListener;
+import com.tool.reportmaker.eventListener.WorkflowTreeEventListener;
 import com.tool.reportmaker.exception.WorkFlowDuplicateElementException;
 import com.tool.reportmaker.exception.WorkFlowTreeDrawingFailedException;
 import com.tool.reportmaker.exception.WorkFlowValidationException;
@@ -755,24 +757,19 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 		}
 
 		try {
-			final DataManagerObject dataManagerObject = workFlowService.createWorkflow(seletedWorkFlowName,
-					seletedParentName, seletedChildName);
+			final DataManagerObject dataManagerObject = new DataManagerObject();
+			workFlowService.createWorkflow(seletedWorkFlowName, seletedParentName, seletedChildName, dataManagerObject,
+					new WorkflowNodeEventListener() {
 
-			if (dataManagerObject != null) {
-				try {
+						@Override
+						public void onSuccessfulNodeCreate() {
 
-					final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
-					final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
-					tree.setModel(treeModel);
-					for (int i = 0; i < tree.getRowCount(); i++) {
-						tree.expandRow(i);
-					}
+							super.onSuccessfulNodeCreate();
+							createWorkFlowTree();
+						}
 
-				} catch (final WorkFlowTreeDrawingFailedException e) {
+					});
 
-					e.printStackTrace();
-				}
-			}
 		} catch (final WorkFlowValidationException e) {
 			JOptionPane.showMessageDialog(this, "" + e.getMessage());
 			e.printStackTrace();
@@ -797,20 +794,20 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 					WorkFlowConstants.DataImportDialogBoxConstants.deleteConfirmConstants.DELETE_CONFORMATION_HEADER,
 					JOptionPane.YES_NO_OPTION);
 			if (dialogResult == JOptionPane.YES_OPTION) {
-				if (workFlowService.deleteNodeController(selectedValuesFromJtree)) {
-					try {
+				if (workFlowService.deleteNodeController(selectedValuesFromJtree, new WorkflowNodeEventListener() {
 
-						final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
-						final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
-						tree.setModel(treeModel);
-						for (int i = 0; i < tree.getRowCount(); i++) {
-							tree.expandRow(i);
-						}
-					} catch (final WorkFlowTreeDrawingFailedException e) {
-						e.printStackTrace();
+					@Override
+					public void onSuccessfulNodeDelete() {
+
+						super.onSuccessfulNodeDelete();
+
+						createWorkFlowTree();
+						comboBoxController("", "", 1);
+
 					}
 
-					comboBoxController("", "", 1);
+				})) {
+					;
 				}
 			}
 
@@ -830,16 +827,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 					"Update Tag Name : " + selectedItemfromJtree);
 			if (!tagNmaetoBeUpdated.equals("")) {
 				if (workFlowService.updateNodeController(selectedValuesFromJtree, tagNmaetoBeUpdated)) {
-					try {
-						final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
-						final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
-						tree.setModel(treeModel);
-						for (int i = 0; i < tree.getRowCount(); i++) {
-							tree.expandRow(i);
-						}
-					} catch (final WorkFlowTreeDrawingFailedException e) {
-						e.printStackTrace();
-					}
+					createWorkFlowTree();
 					comboBoxController("", "", 1);
 				}
 			}
@@ -1000,6 +988,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 	 * @param file
 	 *            the file
 	 */
+
 	private void importSavedWorkFlow(File file) {
 
 		try {
@@ -1007,12 +996,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 			dataManagerObject = workFlowService.deSerializeWorkFlowDiagram(file);
 			if (dataManagerObject != null) {
 
-				final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
-				final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
-				tree.setModel(treeModel);
-				for (int i = 0; i < tree.getRowCount(); i++) {
-					tree.expandRow(i);
-				}
+				createWorkFlowTree();
 
 				comboBoxController("", "", 1);
 
@@ -1025,9 +1009,6 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final WorkFlowTreeDrawingFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1148,5 +1129,45 @@ public class WorkflowDialogUI extends JFrame implements ItemListener, ActionList
 				new WorkflowDialogUI(reportMakerToolService, workFlowService);
 			}
 		}
+	}
+
+	/**
+	 * Creates the work flow tree.
+	 */
+	private void createWorkFlowTree() {
+
+		final DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode("OmniKey (Root)");
+
+		try {
+			workFlowService.createWorkFlowTree(defaultMutableTreeNode, new WorkflowTreeEventListener() {
+
+				@Override
+				public void onWorkflowTreeDrawingStart() {
+					System.out.println("====Workflow Drawing Start===");
+
+				}
+
+				@Override
+				public void onWorkflowTreeDrawingFailed() {
+					JOptionPane.showMessageDialog(null, "Error Occured ");
+
+				}
+
+				@Override
+				public void onWorkflowTreeDrawingComplete() {
+
+					final DefaultTreeModel treeModel = new DefaultTreeModel(defaultMutableTreeNode);
+					tree.setModel(treeModel);
+					for (int i = 0; i < tree.getRowCount(); i++) {
+						tree.expandRow(i);
+					}
+
+				}
+			});
+		} catch (final WorkFlowTreeDrawingFailedException e) {
+
+			e.printStackTrace();
+		}
+
 	}
 }
