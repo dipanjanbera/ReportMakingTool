@@ -1,16 +1,23 @@
 /*
- * ********************************************************
+ **********************************************************
  * OmniKey : A Workflow Driven Smart Data Extraction Tool *
  * ********************************************************
- * 
- * @Package 	:	com.tool.reportmaker.dao	
- * @File 	  	: 	WorkFlowManagerDao.java
- * @Created  	: 	07-10-2016(mm-dd-yyyy)
- * @Version		:	2.1.0
- * @Author     	: 	Dipanjan Bera Copyright (2016)
- * @Email		:	dipanjan033@gmail.com
- * 
- */
+
+    Copyright (C) 2016  Dipanjan Bera dipanjan033@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 package com.tool.reportmaker.dao;
 
@@ -42,31 +49,30 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 
 	/** The data manager object. */
 	DataManagerObject dataManagerObject = null;
-	
+
 	/** The util. */
 	Util util = new Util();
 
-	
 	/**
 	 * Instantiates a new work flow manager dao.
 	 *
 	 * @param dataManagerObject
 	 *            the data manager object
 	 */
-	WorkFlowManagerDao(DataManagerObject dataManagerObject){
+	WorkFlowManagerDao(DataManagerObject dataManagerObject) {
 		this.dataManagerObject = dataManagerObject;
 	}
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#getDataManagerObject()
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * getDataManagerObject()
 	 */
+	@Override
 	public DataManagerObject getDataManagerObject() {
 		return dataManagerObject;
 	}
-
-
 
 	/**
 	 * Sets the data manager object.
@@ -78,10 +84,12 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		this.dataManagerObject = dataManagerObject;
 	}
 
-
-
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkflow(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkflow(
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public DataManagerObject createWorkflow(String workFlowName, String parentName, String childName)
@@ -141,7 +149,6 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 
 		if (workFlow == null) {
 			workFlow = creatNewWorkFlowModel(workFlowManager, workFlowName);
-
 		}
 
 		ParentNode parentNode = checkIfParentNodeAlreadyExists(workFlow, parentName);
@@ -150,12 +157,9 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 			parentNode = createParentNode(workFlow, parentName);
 		}
 
-		ChildNode childNode = null;
 		if (!ckeckIfChildNodeAlreadyExists(parentNode, childName)) {
-			childNode = createNewChildNode(parentNode, childName);
+			createNewChildNode(parentNode, childName);
 		}
-
-		System.out.println("WorkflowManager : " + workFlowManager.toString());
 
 		return dataManagerObject;
 
@@ -173,7 +177,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	private WorkFlow checkIfWorkFlowAlreadyExists(WorkFlowManager workFlowManager, String workFlowName) {
 
 		if (workFlowManager != null) {
-			for (WorkFlow workFlow : workFlowManager.getWorkFlowList()) {
+			for (final WorkFlow workFlow : workFlowManager.getWorkFlowList()) {
 				if (workFlow.getWorkFlowName().equals(workFlowName.trim())) {
 					return workFlow;
 				}
@@ -184,7 +188,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	}
 
 	/**
-	 * Creat new work flow model.
+	 * Create new work flow model.
 	 *
 	 * @param workFlowManager
 	 *            the work flow manager
@@ -194,8 +198,8 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private WorkFlow creatNewWorkFlowModel(WorkFlowManager workFlowManager, String workFlowName) {
 
-		Calendar cal = Calendar.getInstance();
-		WorkFlow workFlow = new WorkFlow(workFlowName, cal.getTime().toString(), new ArrayList<ParentNode>());
+		final Calendar cal = Calendar.getInstance();
+		final WorkFlow workFlow = new WorkFlow(workFlowName, cal.getTime().toString(), new ArrayList<ParentNode>());
 		workFlowManager.getWorkFlowList().add(workFlow);
 		return workFlow;
 
@@ -212,8 +216,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private ParentNode checkIfParentNodeAlreadyExists(WorkFlow workFlow, String parentNodeName) {
 		if (workFlow != null) {
-			for (ParentNode parentNode : workFlow.getParentNodeList()) {
-
+			for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 				if (parentNode.getParentNodeName().equals(parentNodeName)) {
 					return parentNode;
 				}
@@ -232,8 +235,8 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @return the parent node
 	 */
 	private ParentNode createParentNode(WorkFlow workFlow, String parentNodeName) {
-		Calendar cal = Calendar.getInstance();
-		ParentNode parentNode = new ParentNode(new ArrayList<ChildNode>(), true, cal.getTime().toString(),
+		final Calendar cal = Calendar.getInstance();
+		final ParentNode parentNode = new ParentNode(new ArrayList<ChildNode>(), true, cal.getTime().toString(),
 				parentNodeName);
 		workFlow.getParentNodeList().add(parentNode);
 		return parentNode;
@@ -253,7 +256,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	private boolean ckeckIfChildNodeAlreadyExists(ParentNode parentNode, String chileNodeName)
 			throws WorkFlowDuplicateElementException {
 		if (parentNode != null) {
-			for (ChildNode childNode : parentNode.getChildNodeList()) {
+			for (final ChildNode childNode : parentNode.getChildNodeList()) {
 				if (childNode.getTagName().equals(chileNodeName)) {
 					throw new WorkFlowDuplicateElementException("Duplicate Chile Node Name Exists");
 				}
@@ -272,22 +275,26 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @return the child node
 	 */
 	private ChildNode createNewChildNode(ParentNode parentNode, String childNodeName) {
-		ChildNode childNode = new ChildNode(new ArrayList<String>(), childNodeName, true);
+		final ChildNode childNode = new ChildNode(new ArrayList<String>(), childNodeName, true);
 		parentNode.getChildNodeList().add(childNode);
 		return childNode;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkFlowTree()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * createWorkFlowTree()
 	 */
+	@Override
 	public DefaultMutableTreeNode createWorkFlowTree() throws WorkFlowTreeDrawingFailedException {
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
 		DefaultMutableTreeNode defaultMutableTreeNode = null;
 
-		ArrayList<WorkFlow> workFlowList = dataManagerObject.getWorkFlowManager().getWorkFlowList();
+		final ArrayList<WorkFlow> workFlowList = dataManagerObject.getWorkFlowManager().getWorkFlowList();
 
-		for (WorkFlow workFlow : workFlowList) {
+		for (final WorkFlow workFlow : workFlowList) {
 			if (workFlow != null) {
 				defaultMutableTreeNode = new DefaultMutableTreeNode(workFlow.getWorkFlowName());
 				addParentNode(defaultMutableTreeNode, workFlow);
@@ -310,7 +317,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	private DefaultMutableTreeNode addParentNode(DefaultMutableTreeNode defaultMutableWorkFlowNode, WorkFlow workFlow) {
 		DefaultMutableTreeNode defaultMutableParentTreeNode = null;
 		if (workFlow != null) {
-			for (ParentNode parentNode : workFlow.getParentNodeList()) {
+			for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 				if (parentNode != null) {
 					defaultMutableParentTreeNode = new DefaultMutableTreeNode(parentNode.getParentNodeName());
 					addChildNode(defaultMutableParentTreeNode, parentNode);
@@ -334,8 +341,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 			ParentNode parentNode) {
 		DefaultMutableTreeNode defaultMutableChildTreeNode = null;
 		if (parentNode != null) {
-
-			for (ChildNode childNode : parentNode.getChildNodeList()) {
+			for (final ChildNode childNode : parentNode.getChildNodeList()) {
 				if (childNode != null) {
 					defaultMutableChildTreeNode = new DefaultMutableTreeNode(childNode.getTagName());
 					defaultMutableParentNode.add(defaultMutableChildTreeNode);
@@ -345,9 +351,13 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return defaultMutableParentNode;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#deleteNodeController(java.lang.String[])
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * deleteNodeController(java.lang.String[])
 	 */
+	@Override
 	public boolean deleteNodeController(String[] seletedValueToBeDeleted) {
 		boolean result = false;
 		switch (seletedValueToBeDeleted.length) {
@@ -378,7 +388,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private boolean deleteWorkFlowNode(String workFlowName) {
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
 				dataManagerObject.getWorkFlowManager().getWorkFlowList().remove(workFlow);
 				return true;
@@ -398,10 +408,10 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private boolean deleteParentNode(String workFlowName, String parentName) {
 		WorkFlow workFlowNode = null;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
 				workFlowNode = workFlow;
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(parentName)) {
 
 						workFlowNode.getParentNodeList().remove(parentNode);
@@ -428,12 +438,12 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private boolean deleteChildNode(String workFlowName, String parentName, String childName) {
 		ParentNode parentNodeMain = null;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(parentName)) {
 						parentNodeMain = parentNode;
-						for (ChildNode childNode : parentNode.getChildNodeList()) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
 							if (childNode.getTagName().equals(childName)) {
 								parentNodeMain.getChildNodeList().remove(childNode);
 								return true;
@@ -446,24 +456,28 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return false;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#updateNodeController(java.lang.String[], java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * updateNodeController(java.lang.String[], java.lang.String)
 	 */
-	public boolean updateNodeController(String[] seletedValueToBeUpdated,String tagNmaetoBeUpdated) {
+	@Override
+	public boolean updateNodeController(String[] seletedValueToBeUpdated, String tagNmaetoBeUpdated) {
 		boolean result = false;
 		switch (seletedValueToBeUpdated.length) {
 		case 1:
-			result = updateWorkFlowNode(seletedValueToBeUpdated[0],tagNmaetoBeUpdated);
+			result = updateWorkFlowNode(seletedValueToBeUpdated[0], tagNmaetoBeUpdated);
 			break;
 
 		case 2:
-			result = updateParentNode(seletedValueToBeUpdated[0], seletedValueToBeUpdated[1],tagNmaetoBeUpdated);
+			result = updateParentNode(seletedValueToBeUpdated[0], seletedValueToBeUpdated[1], tagNmaetoBeUpdated);
 			break;
 		case 3:
 
-			result = updateChildNode(seletedValueToBeUpdated[0], seletedValueToBeUpdated[1],
-					seletedValueToBeUpdated[2],tagNmaetoBeUpdated);
+			result = updateChildNode(seletedValueToBeUpdated[0], seletedValueToBeUpdated[1], seletedValueToBeUpdated[2],
+					tagNmaetoBeUpdated);
 			break;
 
 		}
@@ -480,9 +494,9 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 *            the tag nmaeto be updated
 	 * @return true, if successful
 	 */
-	private boolean updateWorkFlowNode(String workFlowName,String tagNmaetoBeUpdated) {
+	private boolean updateWorkFlowNode(String workFlowName, String tagNmaetoBeUpdated) {
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
 				workFlow.setWorkFlowName(tagNmaetoBeUpdated);
 				return true;
@@ -502,12 +516,11 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 *            the tag nmaeto be updated
 	 * @return true, if successful
 	 */
-	private boolean updateParentNode(String workFlowName, String parentName , String tagNmaetoBeUpdated) {
+	private boolean updateParentNode(String workFlowName, String parentName, String tagNmaetoBeUpdated) {
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
-
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(parentName)) {
 
 						parentNode.setParentNodeName(tagNmaetoBeUpdated);
@@ -534,14 +547,14 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 *            the tag nmaeto be updated
 	 * @return true, if successful
 	 */
-	private boolean updateChildNode(String workFlowName, String parentName, String childName , String tagNmaetoBeUpdated) {
+	private boolean updateChildNode(String workFlowName, String parentName, String childName,
+			String tagNmaetoBeUpdated) {
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(workFlowName)) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(parentName)) {
-
-						for (ChildNode childNode : parentNode.getChildNodeList()) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
 							if (childNode.getTagName().equals(childName)) {
 								childNode.setTagName(tagNmaetoBeUpdated);
 								return true;
@@ -554,10 +567,14 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return false;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#loadTagNamesController(java.lang.String, java.lang.String, int)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * loadTagNamesController(java.lang.String, java.lang.String, int)
 	 */
+	@Override
 	public ArrayList<String> loadTagNamesController(String parentName, String workFlowName, int origin) {
 
 		ArrayList<String> values = new ArrayList<String>();
@@ -582,23 +599,23 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return values;
 
 	}
-	
+
 	/**
 	 * Load work flow tag name.
 	 *
 	 * @return the array list
 	 */
 	private ArrayList<String> loadWorkFlowTagName() {
-		ArrayList<String> workFlows = new ArrayList<String>();
+		final ArrayList<String> workFlows = new ArrayList<String>();
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			workFlows.add(workFlow.getWorkFlowName());
 		}
 
 		return workFlows;
 
 	}
-	
+
 	/**
 	 * Load parent tag name.
 	 *
@@ -607,22 +624,22 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @return the array list
 	 */
 	private ArrayList<String> loadParentTagName(String WorkFlowTagName) {
-		ArrayList<String> parentNames = new ArrayList<String>();
+		final ArrayList<String> parentNames = new ArrayList<String>();
 
 		if (WorkFlowTagName != null) {
-			for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+			for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 				if (workFlow.getWorkFlowName().equals(WorkFlowTagName)) {
-					for (ParentNode parentNode : workFlow.getParentNodeList()) {
+					for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 						parentNames.add(parentNode.getParentNodeName());
 					}
 				}
 			}
 		}
-		System.out.println("Paprent names "+parentNames.size());
+		System.out.println("Paprent names " + parentNames.size());
 		return parentNames;
 
 	}
-	
+
 	/**
 	 * Load child tag name.
 	 *
@@ -633,13 +650,13 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @return the array list
 	 */
 	private ArrayList<String> loadChildTagName(String parentTagName, String WorkFlowTagName) {
-		ArrayList<String> childNames = new ArrayList<String>();
+		final ArrayList<String> childNames = new ArrayList<String>();
 		if ((parentTagName != null) && (WorkFlowTagName != null)) {
-			for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+			for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 				if (workFlow.getWorkFlowName().equals(WorkFlowTagName)) {
-					for (ParentNode parentNode : workFlow.getParentNodeList()) {
+					for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 						if (parentNode.getParentNodeName().equals(parentTagName)) {
-							for (ChildNode childNode : parentNode.getChildNodeList()) {
+							for (final ChildNode childNode : parentNode.getChildNodeList()) {
 								childNames.add(childNode.getTagName());
 							}
 						}
@@ -650,9 +667,6 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		return childNames;
 
 	}
-	
-	
-	
 
 	/**
 	 * Instantiates a new work flow manager dao.
@@ -666,51 +680,82 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkflow()
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * createNewWorkFlowObject()
+	 */
+	@Override
+	public void createNewWorkFlowObject() {
+		dataManagerObject = null;
+		dataManagerObject = new DataManagerObject();
+		dataManagerObject.setSaved(true);
+		System.out.println("dataManagerObject created111 : " + dataManagerObject.toString());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tool.reportmaker.interfaces.WorkFlowManagerInterface#createWorkflow()
 	 */
 	@Override
 	public DataManagerObject createWorkflow() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#serializeWorkFlowDiagram(java.lang.String, java.io.File)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * serializeWorkFlowDiagram(java.lang.String, java.io.File)
 	 */
-	public void serializeWorkFlowDiagram(String dataMagagerObjectName,File file) throws IOException{
-		
+	@Override
+	public void serializeWorkFlowDiagram(String dataMagagerObjectName, File file) throws IOException {
+
 		dataManagerObject.setDataManagerObjectName(dataMagagerObjectName);
 		dataManagerObject.setFileLocation(file);
 		dataManagerObject.setSaved(true);
-		util.serializeWorkFlowDiagram(dataManagerObject,file);
+		util.serializeWorkFlowDiagram(dataManagerObject, file);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#deSerializeWorkFlowDiagram(java.io.File)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * deSerializeWorkFlowDiagram(java.io.File)
 	 */
-	public DataManagerObject deSerializeWorkFlowDiagram(File file) throws ClassNotFoundException, IOException ,StreamCorruptedException{
-		if((dataManagerObject!= null)){
+	@Override
+	public DataManagerObject deSerializeWorkFlowDiagram(File file)
+			throws ClassNotFoundException, IOException, StreamCorruptedException {
+		if ((dataManagerObject != null)) {
 			dataManagerObject = null;
 			dataManagerObject = util.deserialzeWorkFlowDiagram(file);
 			System.out.println("dataManagerObject fetchewd : " + dataManagerObject.toString());
 		}
 		return dataManagerObject;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#insertDataIntoChildNode(java.lang.String[], java.util.ArrayList, java.io.File)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * insertDataIntoChildNode(java.lang.String[], java.util.ArrayList,
+	 * java.io.File)
 	 */
 	@Override
-	public boolean insertDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,File fileToBeSaved) throws IOException{
-		
-		boolean result = false;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
-			if(workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])){
-				for(ParentNode parentNode : workFlow.getParentNodeList()){
-					if(parentNode.getParentNodeName().equals(selectedValueFromJtree[1])){
-						for(ChildNode childNode : parentNode.getChildNodeList()){
-							if(childNode.getTagName().equals(selectedValueFromJtree[2])){
+	public boolean insertDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
+			File fileToBeSaved) throws IOException {
+
+		final boolean result = false;
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
+					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
+							if (childNode.getTagName().equals(selectedValueFromJtree[2])) {
 								childNode.setValues(valuesTobeInserted);
 								serializeWorkFlowDiagram(dataManagerObject.getDataManagerObjectName(), fileToBeSaved);
 								return true;
@@ -718,28 +763,30 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 						}
 					}
 				}
-				
 			}
-			
 		}
-		
+
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#appendDataIntoChildNode(java.lang.String[], java.util.ArrayList, java.io.File)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * appendDataIntoChildNode(java.lang.String[], java.util.ArrayList,
+	 * java.io.File)
 	 */
 	@Override
 	public boolean appendDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
 			File fileToBeSaved) throws IOException {
-		boolean result = false;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		final boolean result = false;
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
-						for (ChildNode childNode : parentNode.getChildNodeList()) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
 							if (childNode.getTagName().equals(selectedValueFromJtree[2])) {
-								ArrayList<String> childValues = childNode.getValues();
+								final ArrayList<String> childValues = childNode.getValues();
 								childValues.addAll(valuesTobeInserted);
 								serializeWorkFlowDiagram(dataManagerObject.getDataManagerObjectName(), fileToBeSaved);
 								return true;
@@ -747,50 +794,53 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 						}
 					}
 				}
-
 			}
-
 		}
 
 		return result;
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#fetchValuesFromChildNode(java.lang.String[])
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * fetchValuesFromChildNode(java.lang.String[])
 	 */
+	@Override
 	public ArrayList<String> fetchValuesFromChildNode(String selectedValueFromJtree[]) {
 
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
-						for (ChildNode childNode : parentNode.getChildNodeList()) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
 							if (childNode.getTagName().equals(selectedValueFromJtree[2])) {
 								return childNode.getValues();
 							}
 						}
 					}
 				}
-
 			}
-
 		}
 		return null;
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#deleteValuesFromChildNode(java.lang.String[], java.util.ArrayList, java.io.File)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * deleteValuesFromChildNode(java.lang.String[], java.util.ArrayList,
+	 * java.io.File)
 	 */
+	@Override
 	public boolean deleteValuesFromChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
 			File fileToBeSaved) throws IOException {
-		boolean result = false;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		final boolean result = false;
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
-						for (ChildNode childNode : parentNode.getChildNodeList()) {
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
 							if (childNode.getTagName().equals(selectedValueFromJtree[2])) {
 								childNode.getValues().clear();
 								serializeWorkFlowDiagram(dataManagerObject.getDataManagerObjectName(), fileToBeSaved);
@@ -799,20 +849,22 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 						}
 					}
 				}
-
 			}
-
 		}
 
 		return result;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#buildJTableController(java.lang.String[], java.util.ArrayList)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * buildJTableController(java.lang.String[], java.util.ArrayList)
 	 */
+	@Override
 	public DefaultTableModel buildJTableController(String selectedValueFromJtree[], ArrayList<String> totvalues) {
-		DefaultTableModel model = new DefaultTableModel();
+		final DefaultTableModel model = new DefaultTableModel();
 
 		switch (selectedValueFromJtree.length) {
 		case 2:
@@ -838,23 +890,21 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @param totvalues
 	 *            the totvalues
 	 */
-	private void buildJTable(ArrayList<ChildNode> arrChildNode, DefaultTableModel model,ArrayList<String> totvalues) {
+	private void buildJTable(ArrayList<ChildNode> arrChildNode, DefaultTableModel model, ArrayList<String> totvalues) {
 		buildJTableColoums(model, arrChildNode);
 		ArrayList<String> arrString = null;
 		for (int index = 0; index < util.findMaximumArraySize(arrChildNode); index++) {
 			arrString = new ArrayList<String>();
-			for (ChildNode childNode : arrChildNode) {
-
+			for (final ChildNode childNode : arrChildNode) {
 				if (childNode.getValues().size() > index) {
 					arrString.add(childNode.getValues().get(index));
 				} else {
 					arrString.add("");
 				}
-
 			}
 
 			buildJTableRows(arrString, model);
-			calculateTotalValuesForParentNode(arrString,totvalues);
+			calculateTotalValuesForParentNode(arrString, totvalues);
 		}
 
 	}
@@ -880,7 +930,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 *            the arr child node
 	 */
 	private void buildJTableColoums(DefaultTableModel model, ArrayList<ChildNode> arrChildNode) {
-		for (ChildNode childNode : arrChildNode) {
+		for (final ChildNode childNode : arrChildNode) {
 			model.addColumn(childNode.getTagName());
 		}
 	}
@@ -893,9 +943,9 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @return the child nodes from parent nodes
 	 */
 	private ArrayList<ChildNode> getChildNodesFromParentNodes(String selectedValueFromJtree[]) {
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
 						return parentNode.getChildNodeList();
 					}
@@ -904,7 +954,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the child nodes from child node name.
 	 *
@@ -914,12 +964,12 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 */
 	private ArrayList<ChildNode> getChildNodesFromChildNodeName(String selectedValueFromJtree[]) {
 		ArrayList<ChildNode> arrChildNode = null;
-		for (WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
 			if (workFlow.getWorkFlowName().equals(selectedValueFromJtree[0])) {
-				for (ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ParentNode parentNode : workFlow.getParentNodeList()) {
 					if (parentNode.getParentNodeName().equals(selectedValueFromJtree[1])) {
-						for(ChildNode childNode:parentNode.getChildNodeList()){
-							if(childNode.getTagName().equals(selectedValueFromJtree[2])){
+						for (final ChildNode childNode : parentNode.getChildNodeList()) {
+							if (childNode.getTagName().equals(selectedValueFromJtree[2])) {
 								arrChildNode = new ArrayList<ChildNode>();
 								arrChildNode.add(childNode);
 								return arrChildNode;
@@ -931,7 +981,7 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Calculate total values for parent node.
 	 *
@@ -940,19 +990,33 @@ public class WorkFlowManagerDao implements WorkFlowManagerInterface {
 	 * @param totValues
 	 *            the tot values
 	 */
-	private void calculateTotalValuesForParentNode(ArrayList<String> arrString,ArrayList<String> totValues){
-		int count=0;
-		for(String str:arrString){
-			
-			if(!str.equals("")){
-				count+=Integer.parseInt(str.replaceAll("[\\D]", ""));
+	private void calculateTotalValuesForParentNode(ArrayList<String> arrString, ArrayList<String> totValues) {
+		int count = 0;
+		for (final String str : arrString) {
+			if (!str.equals("")) {
+				count += Integer.parseInt(str.replaceAll("[\\D]", ""));
 			}
 		}
-		totValues.add(""+count);
-		
-	}
-	
-	
+		totValues.add("" + count);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tool.reportmaker.interfaces.WorkFlowManagerInterface#
+	 * clearAllDataFromWorkflow()
+	 */
+	@Override
+	public void clearAllDataFromWorkflow() {
+
+		for (final WorkFlow workFlow : dataManagerObject.getWorkFlowManager().getWorkFlowList()) {
+			for (final ParentNode parentNode : workFlow.getParentNodeList()) {
+				for (final ChildNode childNode : parentNode.getChildNodeList()) {
+					childNode.setValues(null);
+				}
+			}
+		}
+	}
 
 }

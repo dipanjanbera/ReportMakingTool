@@ -1,16 +1,23 @@
 /*
- * ********************************************************
+ **********************************************************
  * OmniKey : A Workflow Driven Smart Data Extraction Tool *
  * ********************************************************
- * 
- * @Package 	:	com.tool.reportmaker.interfaces	
- * @File 	  	: 	WorkFlowManagerInterface.java
- * @Created  	: 	07-10-2016(mm-dd-yyyy)
- * @Version		:	2.1.0
- * @Author     	: 	Dipanjan Bera Copyright (2016)
- * @Email		:	dipanjan033@gmail.com
- * 
- */
+
+    Copyright (C) 2016  Dipanjan Bera dipanjan033@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.tool.reportmaker.interfaces;
 
 import java.io.File;
@@ -41,7 +48,7 @@ public interface WorkFlowManagerInterface {
 	 * @throws WorkFlowDuplicateElementException
 	 *             the work flow duplicate element exception
 	 */
-	DataManagerObject createWorkflow() throws WorkFlowValidationException,WorkFlowDuplicateElementException;
+	DataManagerObject createWorkflow() throws WorkFlowValidationException, WorkFlowDuplicateElementException;
 
 	/**
 	 * Creates the workflow.
@@ -60,7 +67,7 @@ public interface WorkFlowManagerInterface {
 	 */
 	DataManagerObject createWorkflow(String workFlowName, String parentName, String childName)
 			throws WorkFlowValidationException, WorkFlowDuplicateElementException;
-	
+
 	/**
 	 * Creates the work flow tree.
 	 *
@@ -69,7 +76,7 @@ public interface WorkFlowManagerInterface {
 	 *             the work flow tree drawing failed exception
 	 */
 	DefaultMutableTreeNode createWorkFlowTree() throws WorkFlowTreeDrawingFailedException;
-	
+
 	/**
 	 * Delete node controller.
 	 *
@@ -78,7 +85,7 @@ public interface WorkFlowManagerInterface {
 	 * @return true, if successful
 	 */
 	boolean deleteNodeController(String[] seletedValueToBeDeleted);
-	
+
 	/**
 	 * Update node controller.
 	 *
@@ -88,8 +95,8 @@ public interface WorkFlowManagerInterface {
 	 *            the tag nmaeto be updated
 	 * @return true, if successful
 	 */
-	boolean updateNodeController(String[] seletedValueToBeUpdated,String tagNmaetoBeUpdated);
-	
+	boolean updateNodeController(String[] seletedValueToBeUpdated, String tagNmaetoBeUpdated);
+
 	/**
 	 * Load tag names controller.
 	 *
@@ -102,7 +109,7 @@ public interface WorkFlowManagerInterface {
 	 * @return the array list
 	 */
 	ArrayList<String> loadTagNamesController(String parentName, String workFlowName, int origin);
-	
+
 	/**
 	 * Serialize work flow diagram.
 	 *
@@ -113,8 +120,8 @@ public interface WorkFlowManagerInterface {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	void serializeWorkFlowDiagram(String dataManagerObjectName , File file) throws IOException;
-	
+	void serializeWorkFlowDiagram(String dataManagerObjectName, File file) throws IOException;
+
 	/**
 	 * De serialize work flow diagram.
 	 *
@@ -128,8 +135,9 @@ public interface WorkFlowManagerInterface {
 	 * @throws StreamCorruptedException
 	 *             the stream corrupted exception
 	 */
-	DataManagerObject deSerializeWorkFlowDiagram(File file) throws ClassNotFoundException, IOException,StreamCorruptedException;
-	
+	DataManagerObject deSerializeWorkFlowDiagram(File file)
+			throws ClassNotFoundException, IOException, StreamCorruptedException;
+
 	/**
 	 * Fetch values from child node.
 	 *
@@ -138,7 +146,7 @@ public interface WorkFlowManagerInterface {
 	 * @return the array list
 	 */
 	ArrayList<String> fetchValuesFromChildNode(String selectedValueFromJtree[]);
-	
+
 	/**
 	 * Insert data into child node.
 	 *
@@ -152,8 +160,9 @@ public interface WorkFlowManagerInterface {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	boolean insertDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,File fileToBeSaved)throws IOException;
-	
+	boolean insertDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
+			File fileToBeSaved) throws IOException;
+
 	/**
 	 * Append data into child node.
 	 *
@@ -167,8 +176,9 @@ public interface WorkFlowManagerInterface {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	boolean appendDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,File fileToBeSaved) throws IOException;
-	
+	boolean appendDataIntoChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
+			File fileToBeSaved) throws IOException;
+
 	/**
 	 * Delete values from child node.
 	 *
@@ -182,8 +192,9 @@ public interface WorkFlowManagerInterface {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	boolean deleteValuesFromChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,File fileToBeSaved) throws IOException;
-	
+	boolean deleteValuesFromChildNode(String selectedValueFromJtree[], ArrayList<String> valuesTobeInserted,
+			File fileToBeSaved) throws IOException;
+
 	/**
 	 * Builds the j table controller.
 	 *
@@ -193,12 +204,22 @@ public interface WorkFlowManagerInterface {
 	 *            the totvalues
 	 * @return the default table model
 	 */
-	DefaultTableModel buildJTableController(String selectedValueFromJtree[],ArrayList<String> totvalues);
-	
+	DefaultTableModel buildJTableController(String selectedValueFromJtree[], ArrayList<String> totvalues);
+
 	/**
 	 * Gets the data manager object.
 	 *
 	 * @return the data manager object
 	 */
 	public DataManagerObject getDataManagerObject();
+
+	/**
+	 * Clear all data from workflow.
+	 */
+	void clearAllDataFromWorkflow();
+
+	/**
+	 * Creates the new work flow object.
+	 */
+	public void createNewWorkFlowObject();
 }

@@ -1,22 +1,29 @@
 /*
- * ********************************************************
+ **********************************************************
  * OmniKey : A Workflow Driven Smart Data Extraction Tool *
  * ********************************************************
- * 
- * @Package 	:	com.tool.reportmaker.util	
- * @File 	  	: 	Util.java
- * @Created  	: 	07-10-2016(mm-dd-yyyy)
- * @Version		:	2.1.0
- * @Author     	: 	Dipanjan Bera Copyright (2016)
- * @Email		:	dipanjan033@gmail.com
- * 
- */
+
+    Copyright (C) 2016  Dipanjan Bera dipanjan033@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.tool.reportmaker.util;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.Dialog.ModalityType;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -26,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,6 +48,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import com.tool.reportmaker.interfaces.AppConstants;
@@ -54,7 +61,6 @@ import com.tool.reportmaker.object.DataManagerObject;
  */
 public class Util {
 
-
 	/**
 	 * Write into file.
 	 *
@@ -65,18 +71,17 @@ public class Util {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public  void writeIntoFile(String fileName,ArrayList<String> matices) throws IOException {
+	public void writeIntoFile(String fileName, ArrayList<String> matices) throws IOException {
 
-		File file = new File(fileName);
+		final File file = new File(fileName);
 
-	
 		if (!file.exists()) {
 			file.createNewFile();
 		}
 
-		FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-		for (String value : matices) {
+		final FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		final BufferedWriter bw = new BufferedWriter(fw);
+		for (final String value : matices) {
 			bw.write(value);
 			bw.write("\n");
 		}
@@ -85,7 +90,6 @@ public class Util {
 
 		System.out.println("Done");
 
-		
 		copyToClipboard();
 	}
 
@@ -96,7 +100,7 @@ public class Util {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void opentxtFileToNotepad() throws IOException {
-		ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "output.txt");
+		final ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "output.txt");
 		pb.start();
 	}
 
@@ -107,21 +111,21 @@ public class Util {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void copyToClipboard() throws IOException {
-		File file1 = new File("output.txt");
-		FileInputStream fis = new FileInputStream(file1);
-		byte[] data = new byte[(int) file1.length()];
+		final File file1 = new File("output.txt");
+		final FileInputStream fis = new FileInputStream(file1);
+		final byte[] data = new byte[(int) file1.length()];
 		fis.read(data);
 		fis.close();
 
-		String str = new String(data, "UTF-8");
+		final String str = new String(data, "UTF-8");
 
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Clipboard clipboard = toolkit.getSystemClipboard();
-		StringSelection strSel = new StringSelection(str);
+		final Toolkit toolkit = Toolkit.getDefaultToolkit();
+		final Clipboard clipboard = toolkit.getSystemClipboard();
+		final StringSelection strSel = new StringSelection(str);
 		clipboard.setContents(strSel, null);
 
 	}
-	
+
 	/**
 	 * Copy to clipboard.
 	 *
@@ -131,23 +135,21 @@ public class Util {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void copyToClipboard(ArrayList<String> arrList) throws IOException {
-		String newLine="\n" , text="";
-		for (String value : arrList) {
-			
-				text+=value+newLine;
-			
-				
-		}
-		
+		final String newLine = "\n";
+		String text = "";
+		for (final String value : arrList) {
 
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Clipboard clipboard = toolkit.getSystemClipboard();
-		StringSelection strSel = new StringSelection(text);
+			text += value + newLine;
+
+		}
+
+		final Toolkit toolkit = Toolkit.getDefaultToolkit();
+		final Clipboard clipboard = toolkit.getSystemClipboard();
+		final StringSelection strSel = new StringSelection(text);
 		clipboard.setContents(strSel, null);
 
 	}
-	
-	
+
 	/**
 	 * On paste from clipboard.
 	 *
@@ -156,18 +158,18 @@ public class Util {
 	@SuppressWarnings("unchecked")
 	public String onPasteFromClipboard() {
 		String text = null;
-		Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-		Transferable t = c.getContents(null);
-		if (t == null)
+		final Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+		final Transferable t = c.getContents(null);
+		if (t == null) {
 			return null;
+		}
 		try {
-			text= (String) t.getTransferData(DataFlavor.stringFlavor);
-		} catch (Exception e) {
+			text = (String) t.getTransferData(DataFlavor.stringFlavor);
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return text;
 	}
-
 
 	/**
 	 * Serialize work flow diagram.
@@ -179,10 +181,10 @@ public class Util {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void serializeWorkFlowDiagram(DataManagerObject dataManagerObject,File file) throws IOException {
+	public void serializeWorkFlowDiagram(DataManagerObject dataManagerObject, File file) throws IOException {
 
-		FileOutputStream fout = new FileOutputStream(""+file.getAbsolutePath());
-		ObjectOutputStream oos = new ObjectOutputStream(fout);
+		final FileOutputStream fout = new FileOutputStream("" + file.getAbsolutePath());
+		final ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(dataManagerObject);
 		oos.close();
 		System.out.println("Done");
@@ -202,19 +204,20 @@ public class Util {
 	 * @throws StreamCorruptedException
 	 *             the stream corrupted exception
 	 */
-	public DataManagerObject deserialzeWorkFlowDiagram(File file) throws IOException, ClassNotFoundException , StreamCorruptedException{
+	public DataManagerObject deserialzeWorkFlowDiagram(File file)
+			throws IOException, ClassNotFoundException, StreamCorruptedException {
 
 		DataManagerObject dataManagerObject = null;
 
-		FileInputStream fin = new FileInputStream("" + file.getAbsolutePath());
-		ObjectInputStream ois = new ObjectInputStream(fin);
+		final FileInputStream fin = new FileInputStream("" + file.getAbsolutePath());
+		final ObjectInputStream ois = new ObjectInputStream(fin);
 		dataManagerObject = (DataManagerObject) ois.readObject();
 		ois.close();
 
 		return dataManagerObject;
 
 	}
-	
+
 	/**
 	 * Find maximum array size.
 	 *
@@ -225,24 +228,25 @@ public class Util {
 	public int findMaximumArraySize(ArrayList<ChildNode> arr) {
 		int _biggest_no = 0;
 
-		for (ChildNode childNode : arr) {
-			int _size = childNode.getValues().size();
-			
+		for (final ChildNode childNode : arr) {
+			final int _size = childNode.getValues().size();
+
 			if (_size > _biggest_no) {
 				_biggest_no = _size;
 			}
 		}
-		
+
 		return _biggest_no;
 	}
-	
+
 	/**
 	 * Gets the key board list.
 	 *
 	 * @return the key board list
 	 */
-	public static Map<String, String> getKeyBoardList(){
-		Map<String, String> keyboardShortcutMap = new HashMap<String, String>();
+	public static Map<String, String> getKeyBoardList() {
+		final Map<String, String> keyboardShortcutMap = new HashMap<String, String>();
+		keyboardShortcutMap.put("Ctrl+N", "New Workflow");
 		keyboardShortcutMap.put("Ctrl+I", "Import Saved Workflow into Stage");
 		keyboardShortcutMap.put("Ctrl+S", "Save Workflow");
 		keyboardShortcutMap.put("Ctrl+Space", "Add New Node to Workflow");
@@ -250,14 +254,15 @@ public class Util {
 		keyboardShortcutMap.put("Ctrl+D", "Delete Existing Node from Workflow");
 		keyboardShortcutMap.put("Ctrl+G", "Extract data from HTML Table");
 		keyboardShortcutMap.put("Ctrl+C", "Clear All data from Data Extraction Window");
+		keyboardShortcutMap.put("Ctrl+K", "Extract data & Open Import Dialog Box  ");
 		keyboardShortcutMap.put("Ctrl+Q", "Exit Program");
-		
+
 		return keyboardShortcutMap;
 	}
-	
+
 	/** The key board shortcutdialog. */
 	private static JDialog keyBoardShortcutdialog = null;
-	
+
 	/** The key board shortcuttable. */
 	private static JTable keyBoardShortcuttable = null;
 
@@ -266,57 +271,56 @@ public class Util {
 	 */
 	public static void showKeyboardShortcut() {
 
-		keyBoardShortcutdialog = new JDialog();
+		Util.keyBoardShortcutdialog = new JDialog();
 
-		keyBoardShortcutdialog.setTitle(AppConstants.DialogBoxHeader.KEYBOARD_SHORTCUT);
-		keyBoardShortcutdialog.setModal(true);
-		keyBoardShortcutdialog.setAlwaysOnTop(true);
-		keyBoardShortcutdialog.setModalityType(ModalityType.APPLICATION_MODAL);
-		keyBoardShortcutdialog.setBounds(100, 100, 550, 300);
-		keyBoardShortcutdialog.setLayout(null);
+		Util.keyBoardShortcutdialog.setTitle(AppConstants.DialogBoxHeader.KEYBOARD_SHORTCUT);
+		Util.keyBoardShortcutdialog.setModal(true);
+		Util.keyBoardShortcutdialog.setAlwaysOnTop(true);
+		Util.keyBoardShortcutdialog.setModalityType(ModalityType.APPLICATION_MODAL);
+		Util.keyBoardShortcutdialog.setBounds(100, 100, 550, 300);
+		Util.keyBoardShortcutdialog.setLayout(null);
 
-		JScrollPane scrollPane = new JScrollPane();
+		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 514, 207);
-		keyBoardShortcutdialog.add(scrollPane);
+		Util.keyBoardShortcutdialog.add(scrollPane);
 
-		keyBoardShortcuttable = new JTable();
-		scrollPane.setViewportView(keyBoardShortcuttable);
+		Util.keyBoardShortcuttable = new JTable();
+		scrollPane.setViewportView(Util.keyBoardShortcuttable);
 		scrollPane.setBounds(10, 11, 514, 241);
 		{
-			JPanel buttonPane = new JPanel();
+			final JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			keyBoardShortcutdialog.add(buttonPane, BorderLayout.SOUTH);
+			Util.keyBoardShortcutdialog.add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				final JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						keyBoardShortcutdialog.dispose();
+						Util.keyBoardShortcutdialog.dispose();
 
 					}
 				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
-				
+
 			}
 
 		}
-		DefaultTableModel model = new DefaultTableModel();
+		final DefaultTableModel model = new DefaultTableModel();
 		model.addColumn("Keyboard Shortcut");
 		model.addColumn("Operation");
 
-
-		for (Map.Entry<String, String> map : Util.getKeyBoardList().entrySet()) {
+		for (final Map.Entry<String, String> map : Util.getKeyBoardList().entrySet()) {
 			model.addRow(new Object[] { "" + map.getKey(), "" + map.getValue() });
 		}
 
-		keyBoardShortcuttable.setModel(model);
+		Util.keyBoardShortcuttable.setModel(model);
 
-		keyBoardShortcutdialog.setLocationRelativeTo(null);
-		keyBoardShortcutdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		Util.keyBoardShortcutdialog.setLocationRelativeTo(null);
+		Util.keyBoardShortcutdialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		keyBoardShortcutdialog.setVisible(true);
+		Util.keyBoardShortcutdialog.setVisible(true);
 	}
 
 }

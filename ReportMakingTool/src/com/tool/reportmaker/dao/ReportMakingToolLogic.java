@@ -1,16 +1,23 @@
 /*
- * ********************************************************
+ **********************************************************
  * OmniKey : A Workflow Driven Smart Data Extraction Tool *
  * ********************************************************
- * 
- * @Package 	:	com.tool.reportmaker.dao	
- * @File 	  	: 	ReportMakingToolLogic.java
- * @Created  	: 	07-10-2016(mm-dd-yyyy)
- * @Version		:	2.1.0
- * @Author     	: 	Dipanjan Bera Copyright (2016)
- * @Email		:	dipanjan033@gmail.com
- * 
- */
+
+    Copyright (C) 2016  Dipanjan Bera dipanjan033@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.tool.reportmaker.dao;
 
 import java.io.IOException;
@@ -32,9 +39,10 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tool.reportmaker.interfaces.ReportMakerInterface#getMatrics()
 	 */
+	@Override
 	public ArrayList<String> getMatrics() {
 		return matrics;
 	}
@@ -51,14 +59,15 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tool.reportmaker.interfaces.ReportMakerInterface#
 	 * noOfColoumsPresentInText(java.util.ArrayList)
 	 */
+	@Override
 	public int noOfColoumsPresentInText(ArrayList<String> arrList) {
 		int count = 0;
-		String text = arrList.get(0);
-		Scanner src = new Scanner(text);
+		final String text = arrList.get(0);
+		final Scanner src = new Scanner(text);
 		src.useDelimiter("\t *");
 		while (src.hasNext()) {
 			if (src.hasNext()) {
@@ -75,22 +84,22 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tool.reportmaker.interfaces.ReportMakerInterface#textParse(java.util.
 	 * ArrayList, int)
 	 */
+	@Override
 	public ArrayList<String> textParse(ArrayList<String> arrList, int coloumNo)
 			throws IOException, TextNotCorrectFormatException {
 
 		try {
-			int count, temCount;
+			int count;
 			matrics = new ArrayList<String>();
 			noOfColoumsPresentInText(arrList);
-			boolean flag = true;
-			for (String txtValue : arrList) {
+			for (final String txtValue : arrList) {
 
-				Scanner src = new Scanner(txtValue);
+				final Scanner src = new Scanner(txtValue);
 				src.useDelimiter("\t *");
 				count = 2;
 
@@ -99,7 +108,7 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 					if (src.hasNext()) {
 
 						if (!src.next().equals(null)) {
-							String value = src.next();
+							final String value = src.next();
 
 							if (count == coloumNo) {
 								putIntegerIntoList(value);
@@ -119,7 +128,7 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 			}
 
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 
 			throw new TextNotCorrectFormatException("");
 		}
@@ -141,20 +150,21 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tool.reportmaker.interfaces.ReportMakerInterface#fetchValueFromOutput
 	 * (java.util.ArrayList, int, int)
 	 */
+	@Override
 	public ArrayList<String> fetchValueFromOutput(ArrayList<String> values, int start, int end)
 			throws ReportMakerException {
 
-		ArrayList<String> valueArr = new ArrayList<String>();
+		final ArrayList<String> valueArr = new ArrayList<String>();
 		if (start > values.size()) {
 			throw new ReportMakerException("Start index is more than Total Count");
 		}
 
-		if (end > values.size() - 1) {
+		if (end > (values.size() - 1)) {
 			end = values.size() - 1;
 		}
 
@@ -164,7 +174,7 @@ public class ReportMakingToolLogic implements ReportMakerInterface {
 
 		for (int i = start; i <= end; i++) {
 
-			String value = values.get(i);
+			final String value = values.get(i);
 			valueArr.add(value);
 
 		}

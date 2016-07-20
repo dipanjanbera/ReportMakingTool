@@ -1,24 +1,29 @@
 /*
- * ********************************************************
+ **********************************************************
  * OmniKey : A Workflow Driven Smart Data Extraction Tool *
  * ********************************************************
- * 
- * @Package 	:	com.tool.reportmaker.ui	
- * @File 	  	: 	WorkflowDialogUI.java
- * @Created  	: 	07-10-2016(mm-dd-yyyy)
- * @Version		:	2.1.0
- * @Author     	: 	Dipanjan Bera Copyright (2016)
- * @Email		:	dipanjan033@gmail.com
- * 
- */
+
+    Copyright (C) 2016  Dipanjan Bera dipanjan033@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package com.tool.reportmaker.ui;
 
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Desktop.Action;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -29,13 +34,10 @@ import java.io.IOException;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 
-import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -50,13 +52,12 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
-import javax.swing.border.EmptyBorder;
+import javax.swing.WindowConstants;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.Keymap;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -66,78 +67,72 @@ import com.tool.reportmaker.exception.WorkFlowValidationException;
 import com.tool.reportmaker.interfaces.AppConstants;
 import com.tool.reportmaker.interfaces.WorkFlowConstants;
 import com.tool.reportmaker.object.DataManagerObject;
-import com.tool.reportmaker.object.ParentNode;
-import com.tool.reportmaker.object.WorkFlow;
-import com.tool.reportmaker.object.WorkFlowManager;
 import com.tool.reportmaker.service.ReportMakerToolService;
 import com.tool.reportmaker.service.WorkFlowManagerService;
 import com.tool.reportmaker.util.Util;
-
-import javax.swing.border.*;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class WorkflowDialogUI.
  */
-public class WorkflowDialogUI extends JFrame implements ItemListener,
-		ActionListener, TreeSelectionListener {
+public class WorkflowDialogUI extends JFrame implements ItemListener, ActionListener, TreeSelectionListener {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The content pane. */
 	private JFrame contentPane;
-	
+
 	/** The work flow text field. */
 	private JTextField workFlowTextField;
-	
+
 	/** The parent text field. */
 	private JTextField parentTextField;
-	
+
 	/** The chile tag text field. */
 	private JTextField chileTagTextField;
-	
+
 	/** The workflow combo box. */
 	private JComboBox parentComboBox, childTagcomboBox_1, workflowComboBox;
-	
+
 	/** The rdbtn new child tag. */
-	private JRadioButton workflowselectExiting, workflowselectNew,
-			parentTagExitingradioButton, parentTagNewradioButton,
+	private JRadioButton workflowselectExiting, workflowselectNew, parentTagExitingradioButton, parentTagNewradioButton,
 			rdbtnExitingChildTag, rdbtnNewChildTag;
-	
+
 	/** The btn close. */
 	private JButton btnUpdate, btnAdd, btnDelete, btnSave, btnClose;
-	
+
 	/** The menu bar. */
 	private JMenuBar menuBar;
-	
+
 	/** The mn new menu. */
-	private JMenu mnNewMenu,mnEditMenu;
-	
+	private JMenu mnNewMenu, mnEditMenu;
+
 	/** The mntm import file. */
-	private JMenuItem mntmNewMenuItem, mntmImportFile,mntmAddMenuItem,mntmDeleteMenuItem,mntmUpdateMenuItem,mntmExitMenuItem,keyboardShortcutMenuItem;
-	
+	private JMenuItem mntmNewMenuItem, mntmImportFile, mntmAddMenuItem, mntmDeleteMenuItem, mntmUpdateMenuItem,
+			mntmExitMenuItem, keyboardShortcutMenuItem, mntmNewWorkflowMenuItem;
+
 	/** The work flow service. */
 	private WorkFlowManagerService workFlowService = null;
-	
+
 	/** The report maker tool service. */
-	private ReportMakerToolService reportMakerToolService=null;
-	
+	private ReportMakerToolService reportMakerToolService = null;
+
 	/** The data manager object. */
 	DataManagerObject dataManagerObject = null;
-	
+
 	/** The tree. */
 	private JTree tree;
-	
+
 	/** The key stroke to open. */
 	private KeyStroke keyStrokeToOpen;
-	
+
 	/** The selected values from jtree. */
 	String[] selectedValuesFromJtree = null;
-	
+
 	/** The selected itemfrom jtree. */
 	String selectedItemfromJtree = null;
-	
+
 	/** The scroll pane. */
 	JScrollPane scrollPane;
 
@@ -149,11 +144,12 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	 * @param workFlowManagerService
 	 *            the work flow manager service
 	 */
-	public WorkflowDialogUI(ReportMakerToolService reportMakerToolService,WorkFlowManagerService workFlowManagerService) {
+	public WorkflowDialogUI(ReportMakerToolService reportMakerToolService,
+			WorkFlowManagerService workFlowManagerService) {
 		super();
 		initializedGUI();
-		this.workFlowService = workFlowManagerService;
-		this.reportMakerToolService=reportMakerToolService;
+		workFlowService = workFlowManagerService;
+		this.reportMakerToolService = reportMakerToolService;
 		dataManagerObject = workFlowManagerService.getDataManagerObject();
 		importWorkflowIfExists(dataManagerObject.getFileLocation());
 	}
@@ -164,10 +160,10 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	public void initializedGUI() {
 
 		contentPane = new JFrame();
-		
-		contentPane.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		contentPane.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		contentPane.setTitle(AppConstants.DialogBoxHeader.WORKFLOW_MANAGER);
-		
+
 		contentPane.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -175,17 +171,15 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 
 			}
 		});
-		
-		
+
 		contentPane.setBounds(100, 100, 941, 524);
 
 		// contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		contentPane.setLayout(null);
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "WorkFlow",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		final JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "WorkFlow", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setBounds(10, 36, 336, 218);
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -198,7 +192,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		workflowselectNew.setBounds(190, 31, 109, 23);
 		panel.add(workflowselectNew);
 
-		JLabel lblSelectExitingWorkflow = new JLabel("Select Exiting Workflow");
+		final JLabel lblSelectExitingWorkflow = new JLabel("Select Exiting Workflow");
 		lblSelectExitingWorkflow.setBounds(10, 103, 152, 14);
 		panel.add(lblSelectExitingWorkflow);
 
@@ -206,7 +200,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		workflowComboBox.setBounds(172, 100, 127, 20);
 		panel.add(workflowComboBox);
 
-		JLabel lblAddNewWorkflow = new JLabel("Add New Workflow");
+		final JLabel lblAddNewWorkflow = new JLabel("Add New Workflow");
 		lblAddNewWorkflow.setBounds(10, 167, 127, 14);
 		panel.add(lblAddNewWorkflow);
 
@@ -215,13 +209,12 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		panel.add(workFlowTextField);
 		workFlowTextField.setColumns(10);
 
-		JSeparator separator = new JSeparator();
+		final JSeparator separator = new JSeparator();
 		separator.setBounds(10, 61, 316, 2);
 		panel.add(separator);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Parent Tag",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		final JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Parent Tag", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setLayout(null);
 		panel_1.setBounds(356, 36, 336, 218);
 		contentPane.add(panel_1);
@@ -234,7 +227,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		parentTagNewradioButton.setBounds(177, 27, 127, 23);
 		panel_1.add(parentTagNewradioButton);
 
-		JLabel lblSelectExitingTag = new JLabel("Select Exiting Tag");
+		final JLabel lblSelectExitingTag = new JLabel("Select Exiting Tag");
 		lblSelectExitingTag.setBounds(10, 101, 127, 14);
 		panel_1.add(lblSelectExitingTag);
 
@@ -242,7 +235,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		parentComboBox.setBounds(177, 98, 127, 20);
 		panel_1.add(parentComboBox);
 
-		JLabel lblAddNewTag = new JLabel("Add New Parent Tag");
+		final JLabel lblAddNewTag = new JLabel("Add New Parent Tag");
 		lblAddNewTag.setBounds(10, 165, 127, 14);
 		panel_1.add(lblAddNewTag);
 
@@ -251,18 +244,17 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		parentTextField.setBounds(177, 162, 127, 20);
 		panel_1.add(parentTextField);
 
-		JSeparator separator_1 = new JSeparator();
+		final JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 57, 316, 2);
 		panel_1.add(separator_1);
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(null, "Child Tag",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		final JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Child Tag", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_2.setBounds(10, 259, 682, 190);
 		contentPane.add(panel_2);
 		panel_2.setLayout(null);
 
-		JLabel childTagName = new JLabel("Add New Child Tag");
+		final JLabel childTagName = new JLabel("Add New Child Tag");
 		childTagName.setBounds(118, 144, 106, 14);
 		panel_2.add(childTagName);
 
@@ -279,11 +271,11 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		rdbtnExitingChildTag.setBounds(168, 25, 152, 23);
 		panel_2.add(rdbtnExitingChildTag);
 
-		JSeparator separator_2 = new JSeparator();
+		final JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(118, 68, 376, 2);
 		panel_2.add(separator_2);
 
-		JLabel label = new JLabel("Select Exiting Tag");
+		final JLabel label = new JLabel("Select Exiting Tag");
 		label.setBounds(123, 99, 127, 14);
 		panel_2.add(label);
 
@@ -295,10 +287,9 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		btnUpdate.setBounds(402, 465, 102, 23);
 		contentPane.add(btnUpdate);
 
-		JPanel panel_3 = new JPanel();
+		final JPanel panel_3 = new JPanel();
 		panel_3.setBounds(695, 36, 220, 413);
-		panel_3.setBorder(new TitledBorder(null, "Design",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_3.setBorder(new TitledBorder(null, "Design", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel_3);
 		panel_3.setLayout(null);
 
@@ -331,53 +322,58 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 
+		mntmNewWorkflowMenuItem = new JMenuItem("New");
+		mnNewMenu.add(mntmNewWorkflowMenuItem);
+
+		mntmNewWorkflowMenuItem.setMnemonic(KeyEvent.VK_N);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
+		mntmNewWorkflowMenuItem.setAccelerator(keyStrokeToOpen);
+
 		mntmNewMenuItem = new JMenuItem("Save");
 		mnNewMenu.add(mntmNewMenuItem);
-		
+
 		mntmNewMenuItem.setMnemonic(KeyEvent.VK_S);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
 		mntmNewMenuItem.setAccelerator(keyStrokeToOpen);
 
 		mntmImportFile = new JMenuItem("Import File");
 		mnNewMenu.add(mntmImportFile);
 		mntmImportFile.setMnemonic(KeyEvent.VK_I);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK);
 		mntmImportFile.setAccelerator(keyStrokeToOpen);
-		
+
 		mntmExitMenuItem = new JMenuItem("Exit");
 		mnNewMenu.add(mntmExitMenuItem);
 		mntmExitMenuItem.setMnemonic(KeyEvent.VK_Q);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK);
 		mntmExitMenuItem.setAccelerator(keyStrokeToOpen);
-		
+
 		mnEditMenu = new JMenu("Edit");
 		menuBar.add(mnEditMenu);
-		
+
 		mntmAddMenuItem = new JMenuItem("Add Node");
 		mnEditMenu.add(mntmAddMenuItem);
 		mntmAddMenuItem.setMnemonic(KeyEvent.VK_SPACE);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK);
 		mntmAddMenuItem.setAccelerator(keyStrokeToOpen);
-		
+
 		mntmUpdateMenuItem = new JMenuItem("Update Node");
 		mnEditMenu.add(mntmUpdateMenuItem);
 		mntmUpdateMenuItem.setMnemonic(KeyEvent.VK_U);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_DOWN_MASK);
 		mntmUpdateMenuItem.setAccelerator(keyStrokeToOpen);
-		
+
 		mntmDeleteMenuItem = new JMenuItem("Delete Node");
 		mnEditMenu.add(mntmDeleteMenuItem);
 		mntmDeleteMenuItem.setMnemonic(KeyEvent.VK_D);
-		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK);
+		keyStrokeToOpen = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK);
 		mntmDeleteMenuItem.setAccelerator(keyStrokeToOpen);
-		
-		
-		JMenu keyboardShortcut = new JMenu("Keyboard Shortcut");
+
+		final JMenu keyboardShortcut = new JMenu("Keyboard Shortcut");
 		menuBar.add(keyboardShortcut);
-		
+
 		keyboardShortcutMenuItem = new JMenuItem("Keyboard Shortcut List");
 		keyboardShortcut.add(keyboardShortcutMenuItem);
-		
 
 		contentPane.setLocationRelativeTo(null);
 		contentPane.setResizable(false);
@@ -386,7 +382,6 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		btnSave = new JButton("Save");
 		btnSave.setBounds(514, 465, 89, 23);
 		contentPane.add(btnSave);
-		
 
 		btnClose = new JButton("Close");
 		btnClose.setBounds(613, 465, 89, 23);
@@ -398,22 +393,21 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		radioBoxController();
 
 	}
-	
-	
+
 	/**
 	 * Adds the radio button group.
 	 */
 	private void addRadioButtonGroup() {
 
-		ButtonGroup childRadioButtongrp = new ButtonGroup();
+		final ButtonGroup childRadioButtongrp = new ButtonGroup();
 		childRadioButtongrp.add(rdbtnNewChildTag);
 		childRadioButtongrp.add(rdbtnExitingChildTag);
 
-		ButtonGroup parentRadioButtongrp = new ButtonGroup();
+		final ButtonGroup parentRadioButtongrp = new ButtonGroup();
 		parentRadioButtongrp.add(parentTagExitingradioButton);
 		parentRadioButtongrp.add(parentTagNewradioButton);
 
-		ButtonGroup workflowRadioButtongrp = new ButtonGroup();
+		final ButtonGroup workflowRadioButtongrp = new ButtonGroup();
 		workflowRadioButtongrp.add(workflowselectNew);
 		workflowRadioButtongrp.add(workflowselectExiting);
 
@@ -434,7 +428,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 
 		/*
 		 * parentComboBox.addItem("India"); parentComboBox.addItem("Pakistan");
-		 * 
+		 *
 		 * workflowComboBox.addItem("Cricket");
 		 * workflowComboBox.addItem("FootBall");
 		 */
@@ -531,10 +525,20 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		mntmDeleteMenuItem.addActionListener(this);
 		mntmExitMenuItem.addActionListener(this);
 		keyboardShortcutMenuItem.addActionListener(this);
+		mntmNewWorkflowMenuItem.addActionListener(this);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+	 * Action performed.
+	 *
+	 * @param actionEvent
+	 *            the action event
+	 */
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
@@ -569,12 +573,24 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		if (actionEvent.getSource() == mntmDeleteMenuItem) {
 			onDeleteButtonClick();
 		}
-		if(actionEvent.getSource() == mntmExitMenuItem){
+		if (actionEvent.getSource() == mntmExitMenuItem) {
 			exitProgram();
 		}
-		if(actionEvent.getSource() == keyboardShortcutMenuItem){
+		if (actionEvent.getSource() == keyboardShortcutMenuItem) {
 			Util.showKeyboardShortcut();
 		}
+		if (actionEvent.getSource() == mntmNewWorkflowMenuItem) {
+			createNewWorkFlow();
+		}
+	}
+
+	/**
+	 * Creates the new work flow.
+	 */
+	private void createNewWorkFlow() {
+		restartProgram();
+
+		// new WorkflowDialogUI(reportMakerToolService, workFlowService);
 	}
 
 	/**
@@ -640,8 +656,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		if (actionEvent.getSource() == parentTagExitingradioButton) {
 			parentTagExitingradioButton.setEnabled(true);
 			radioBoxController();
-			comboBoxController(null, workflowComboBox.getSelectedItem()
-					.toString(), 2);
+			comboBoxController(null, workflowComboBox.getSelectedItem().toString(), 2);
 
 		}
 
@@ -678,16 +693,24 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	/**
+	 * Item state changed.
+	 *
+	 * @param arg0
+	 *            the arg0
+	 */
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
 	 */
 	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 
 		if (arg0.getSource() == workflowComboBox) {
-			System.out.println("fdsfffffffffffff");
 			if (arg0.getStateChange() == ItemEvent.SELECTED) {
-				Object item = arg0.getItem();
+				final Object item = arg0.getItem();
 				System.out.println(item);
 				parentTagNewradioButton.setSelected(true);
 				parentTextField.setEnabled(true);
@@ -732,38 +755,34 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 		}
 
 		try {
-			DataManagerObject dataManagerObject = workFlowService
-					.createWorkflow(seletedWorkFlowName, seletedParentName,
-							seletedChildName);
-			
+			final DataManagerObject dataManagerObject = workFlowService.createWorkflow(seletedWorkFlowName,
+					seletedParentName, seletedChildName);
+
 			if (dataManagerObject != null) {
 				try {
 
-					DefaultMutableTreeNode treeNode = workFlowService
-							.createWorkFlowTree();
-					DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
+					final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
+					final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
 					tree.setModel(treeModel);
 					for (int i = 0; i < tree.getRowCount(); i++) {
 						tree.expandRow(i);
 					}
 
-				} catch (WorkFlowTreeDrawingFailedException e) {
+				} catch (final WorkFlowTreeDrawingFailedException e) {
 
 					e.printStackTrace();
 				}
 			}
-		} catch (WorkFlowValidationException e) {
+		} catch (final WorkFlowValidationException e) {
 			JOptionPane.showMessageDialog(this, "" + e.getMessage());
 			e.printStackTrace();
-		} catch (WorkFlowDuplicateElementException e) {
+		} catch (final WorkFlowDuplicateElementException e) {
 			JOptionPane.showMessageDialog(this, "" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		System.out.println("WORKFLOW : " + !seletedWorkFlowName.equals("")
-				+ " ParentName : " + seletedParentName + "  ChildName : "
-				+ seletedChildName);
-		
+		System.out.println("WORKFLOW : " + !seletedWorkFlowName.equals("") + " ParentName : " + seletedParentName
+				+ "  ChildName : " + seletedChildName);
 
 	}
 
@@ -773,32 +792,30 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	private void onDeleteButtonClick() {
 
 		if (selectedValuesFromJtree != null) {
-			int dialogResult = JOptionPane.showConfirmDialog(null,
+			final int dialogResult = JOptionPane.showConfirmDialog(null,
 					WorkFlowConstants.DataImportDialogBoxConstants.deleteConfirmConstants.DELETE_CONFORMATION_MSG,
 					WorkFlowConstants.DataImportDialogBoxConstants.deleteConfirmConstants.DELETE_CONFORMATION_HEADER,
 					JOptionPane.YES_NO_OPTION);
 			if (dialogResult == JOptionPane.YES_OPTION) {
 				if (workFlowService.deleteNodeController(selectedValuesFromJtree)) {
 					try {
-						
-						DefaultMutableTreeNode treeNode = workFlowService
-								.createWorkFlowTree();
-						DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
+
+						final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
+						final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
 						tree.setModel(treeModel);
 						for (int i = 0; i < tree.getRowCount(); i++) {
 							tree.expandRow(i);
 						}
-					} catch (WorkFlowTreeDrawingFailedException e) {
+					} catch (final WorkFlowTreeDrawingFailedException e) {
 						e.printStackTrace();
 					}
 
 					comboBoxController("", "", 1);
 				}
 			}
-			
+
 		} else {
-			JOptionPane.showMessageDialog(null,
-					"Please Select a Node from Tree Diagram");
+			JOptionPane.showMessageDialog(null, "Please Select a Node from Tree Diagram");
 		}
 	}
 
@@ -808,22 +825,19 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	private void onUpdateButtonClick() {
 
 		if (selectedValuesFromJtree != null) {
-			JFrame frame = new JFrame("");
-			String tagNmaetoBeUpdated = JOptionPane.showInputDialog(frame,
+			final JFrame frame = new JFrame("");
+			final String tagNmaetoBeUpdated = JOptionPane.showInputDialog(frame,
 					"Update Tag Name : " + selectedItemfromJtree);
 			if (!tagNmaetoBeUpdated.equals("")) {
-				if (workFlowService.updateNodeController(
-						selectedValuesFromJtree, tagNmaetoBeUpdated)) {
+				if (workFlowService.updateNodeController(selectedValuesFromJtree, tagNmaetoBeUpdated)) {
 					try {
-						DefaultMutableTreeNode treeNode = workFlowService
-								.createWorkFlowTree();
-						DefaultTreeModel treeModel = new DefaultTreeModel(
-								treeNode);
+						final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
+						final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
 						tree.setModel(treeModel);
 						for (int i = 0; i < tree.getRowCount(); i++) {
 							tree.expandRow(i);
 						}
-					} catch (WorkFlowTreeDrawingFailedException e) {
+					} catch (final WorkFlowTreeDrawingFailedException e) {
 						e.printStackTrace();
 					}
 					comboBoxController("", "", 1);
@@ -831,8 +845,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 			}
 
 		} else {
-			JOptionPane.showMessageDialog(null,
-					"Please Select a Node from Tree Diagram");
+			JOptionPane.showMessageDialog(null, "Please Select a Node from Tree Diagram");
 		}
 	}
 
@@ -846,14 +859,13 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	public void valueChanged(TreeSelectionEvent e) {
 		try {
 			btnDelete.setEnabled(true);
-			TreePath currentSelection = tree.getSelectionPath();
-			Object selectionArr[] = currentSelection.getPath();
+			final TreePath currentSelection = tree.getSelectionPath();
+			final Object selectionArr[] = currentSelection.getPath();
 			selectedValuesFromJtree = getSelectedValueFomTree(selectionArr);
-			selectedItemfromJtree = currentSelection.getLastPathComponent()
-					.toString();
+			selectedItemfromJtree = currentSelection.getLastPathComponent().toString();
 			System.out.println(Arrays.toString(selectedValuesFromJtree));
 
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			exception.printStackTrace();
 		}
 	}
@@ -867,7 +879,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	 */
 	private String[] getSelectedValueFomTree(Object[] selectionArr) {
 
-		String[] selectedValues = new String[selectionArr.length - 1];
+		final String[] selectedValues = new String[selectionArr.length - 1];
 
 		for (int index = 0; index < (selectionArr.length - 1); index++) {
 			selectedValues[index] = selectionArr[index + 1].toString();
@@ -886,20 +898,17 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	 * @param origin
 	 *            the origin
 	 */
-	public void comboBoxController(String parentTagName,
-			String workFlowTagName, int origin) {
+	public void comboBoxController(String parentTagName, String workFlowTagName, int origin) {
 		try {
-			String seletedComboBoxValue = null;
 			switch (origin) {
 			case 1:
 				System.out.println("come heee " + workFlowTagName);
 
 				try {
-					ArrayList<String> list = workFlowService
-							.loadTagNamesController("", workFlowTagName, 1);
+					final ArrayList<String> list = workFlowService.loadTagNamesController("", workFlowTagName, 1);
 					populateComboBox(list, workflowComboBox);
 					System.out.println("come wwwwwwwww " + list.size());
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -909,11 +918,10 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 			case 2:
 				System.out.println("come heee 22222" + workFlowTagName);
 				try {
-					ArrayList<String> list = workFlowService
-							.loadTagNamesController("", workFlowTagName, 2);
+					final ArrayList<String> list = workFlowService.loadTagNamesController("", workFlowTagName, 2);
 					populateComboBox(list, parentComboBox);
 					System.out.println("come wwwwwwwww " + list.size());
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -924,19 +932,18 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 			case 3:
 				System.out.println("come heee 333" + workFlowTagName);
 				try {
-					ArrayList<String> list = workFlowService
-							.loadTagNamesController(parentTagName,
-									workFlowTagName, 3);
+					final ArrayList<String> list = workFlowService.loadTagNamesController(parentTagName,
+							workFlowTagName, 3);
 					populateComboBox(list, childTagcomboBox_1);
 					System.out.println("come wwwwwwwww " + list.size());
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//
 
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 
 			// e.printStackTrace();
 		}
@@ -951,20 +958,19 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	 * @param jComboBox
 	 *            the j combo box
 	 */
-	private void populateComboBox(ArrayList<String> comboBoxValues,
-			JComboBox jComboBox) {
+	private void populateComboBox(ArrayList<String> comboBoxValues, JComboBox jComboBox) {
 		try {
 
 			jComboBox.removeAllItems();
 
-			for (String value : comboBoxValues) {
+			for (final String value : comboBoxValues) {
 				jComboBox.addItem(value);
 
 			}
 
 			jComboBox.setSelectedIndex(0);
 			jComboBox.addItemListener(this);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
@@ -997,14 +1003,12 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	private void importSavedWorkFlow(File file) {
 
 		try {
-			
-			dataManagerObject = workFlowService
-					.deSerializeWorkFlowDiagram(file);
+
+			dataManagerObject = workFlowService.deSerializeWorkFlowDiagram(file);
 			if (dataManagerObject != null) {
 
-				DefaultMutableTreeNode treeNode = workFlowService
-						.createWorkFlowTree();
-				DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
+				final DefaultMutableTreeNode treeNode = workFlowService.createWorkFlowTree();
+				final DefaultTreeModel treeModel = new DefaultTreeModel(treeNode);
 				tree.setModel(treeModel);
 				for (int i = 0; i < tree.getRowCount(); i++) {
 					tree.expandRow(i);
@@ -1013,17 +1017,17 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 				comboBoxController("", "", 1);
 
 			}
-		}catch (StreamCorruptedException e) {
+		} catch (final StreamCorruptedException e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "File Courrupted or not a vaild file format to Import .");
 
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (WorkFlowTreeDrawingFailedException e) {
+		} catch (final WorkFlowTreeDrawingFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -1036,11 +1040,11 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	private void openDialogBoxForImportFile() {
 
 		final JFileChooser fileDialog = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("odm file", "odm", "odm");
+		final FileNameExtensionFilter filter = new FileNameExtensionFilter("odm file", "odm", "odm");
 		fileDialog.setFileFilter(filter);
-		int returnVal = fileDialog.showOpenDialog(contentPane);
+		final int returnVal = fileDialog.showOpenDialog(contentPane);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			java.io.File file = fileDialog.getSelectedFile();
+			final java.io.File file = fileDialog.getSelectedFile();
 			importSavedWorkFlow(file);
 
 		}
@@ -1053,30 +1057,30 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	private void openDialogBoxForSaveFile() {
 		try {
 			final JFileChooser fileDialog = new JFileChooser();
-			int returnVal = fileDialog.showSaveDialog(contentPane);
+			final int returnVal = fileDialog.showSaveDialog(contentPane);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				java.io.File file = fileDialog.getSelectedFile();
-				String fileToBeSaved = file.toString()+".odm";
+				final java.io.File file = fileDialog.getSelectedFile();
+				final String fileToBeSaved = file.toString() + ".odm";
 				workFlowService.serializeWorkFlowDiagram(new File(fileToBeSaved).getName(), new File(fileToBeSaved));
 
-				System.out.println("sdcfsd"+file.getAbsolutePath());
+				System.out.println("sdcfsd" + file.getAbsolutePath());
 			} else {
 
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	/**
 	 * Import workflow if exists.
 	 *
 	 * @param file
 	 *            the file
 	 */
-	private void importWorkflowIfExists(File file){
-		if(file!=null){
+	private void importWorkflowIfExists(File file) {
+		if (file != null) {
 			importSavedWorkFlow(file);
 		}
 	}
@@ -1093,7 +1097,7 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 
 				workFlowService.serializeWorkFlowDiagram(dataManagerObject.getFileLocation().getName(),
 						dataManagerObject.getFileLocation());
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -1102,24 +1106,47 @@ public class WorkflowDialogUI extends JFrame implements ItemListener,
 	/**
 	 * Exit program.
 	 */
-	private void exitProgram(){
-		if(dataManagerObject.isSaved()){
-    		contentPane.setVisible(false);
-        	new Welcome(reportMakerToolService,workFlowService);
-    	}else{
-    		int dialogResult = JOptionPane.showConfirmDialog(null,
-					WorkFlowConstants.EXIT_CONFORMATOIN_TXT,
-					WorkFlowConstants.EXIT_CONFORMATOIN_HEADER,
-					JOptionPane.YES_NO_CANCEL_OPTION);
+	private void exitProgram() {
+		if (dataManagerObject.isSaved()) {
+			contentPane.setVisible(false);
+			new Welcome(reportMakerToolService, workFlowService);
+		} else {
+			final int dialogResult = JOptionPane.showConfirmDialog(null, WorkFlowConstants.EXIT_CONFORMATOIN_TXT,
+					WorkFlowConstants.EXIT_CONFORMATOIN_HEADER, JOptionPane.YES_NO_CANCEL_OPTION);
 			if (dialogResult == JOptionPane.YES_OPTION) {
 				saveWorkflowDiagram();
 				contentPane.setVisible(false);
-            	new Welcome(reportMakerToolService,workFlowService);
+				new Welcome(reportMakerToolService, workFlowService);
 			}
 			if (dialogResult == JOptionPane.NO_OPTION) {
 				contentPane.setVisible(false);
-            	new Welcome(reportMakerToolService,workFlowService);
+				new Welcome(reportMakerToolService, workFlowService);
 			}
-    	}
+		}
+	}
+
+	/**
+	 * Restart program.
+	 */
+	private void restartProgram() {
+		if (dataManagerObject.isSaved()) {
+			contentPane.setVisible(false);
+			workFlowService.createNewWorkFlowObject();
+			new WorkflowDialogUI(reportMakerToolService, workFlowService);
+		} else {
+			final int dialogResult = JOptionPane.showConfirmDialog(null, WorkFlowConstants.EXIT_CONFORMATOIN_TXT,
+					WorkFlowConstants.EXIT_CONFORMATOIN_HEADER, JOptionPane.YES_NO_CANCEL_OPTION);
+			if (dialogResult == JOptionPane.YES_OPTION) {
+				saveWorkflowDiagram();
+				contentPane.setVisible(false);
+				workFlowService.createNewWorkFlowObject();
+				new WorkflowDialogUI(reportMakerToolService, workFlowService);
+			}
+			if (dialogResult == JOptionPane.NO_OPTION) {
+				contentPane.setVisible(false);
+				workFlowService.createNewWorkFlowObject();
+				new WorkflowDialogUI(reportMakerToolService, workFlowService);
+			}
+		}
 	}
 }
